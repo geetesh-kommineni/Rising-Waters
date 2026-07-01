@@ -5,7 +5,7 @@ An intelligent flood risk prediction system that uses machine learning to analys
 
 ---
 
-## 🌟 Key Features & Enhancements
+##  Key Features & Enhancements
 
 * **Regional Rainfall Modeling**: Re-trained on regional datasets utilizing 5 independent features (`Cloud Cover`, `ANNUAL`, `Jan-Feb`, `Mar-May`, `Jun-Sep`) to classify flood risk (`flood`).
 * **Stitch Design System (Lumina Hydro)**: Fully styled using a clean light theme with frosted-glass containers, radial mesh gradients, and a dynamic Light/Dark Mode switcher.
@@ -15,7 +15,7 @@ An intelligent flood risk prediction system that uses machine learning to analys
 
 ---
 
-## 🛠️ Project Structure
+##  Project Structure
 
 ```
 Rising waters/
@@ -59,7 +59,7 @@ Rising waters/
 
 ---
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Step 1 — Install Dependencies
 ```bash
@@ -89,11 +89,11 @@ Running this script executes:
 python app.py
 ```
 Open your browser and navigate to:
-👉 **[http://127.0.0.1:5000](http://127.0.0.1:5000)**
+ **[http://127.0.0.1:5000](http://127.0.0.1:5000)**
 
 ---
 
-## 📊 Model Performance
+##  Model Performance
 
 Evaluated accuracies using stratified cross-validation on test splits:
 
@@ -106,7 +106,7 @@ Evaluated accuracies using stratified cross-validation on test splits:
 
 ---
 
-## 🔒 Security & Data Privacy
+##  Security & Data Privacy
 
 * **Hashed Storage**: Passwords are never stored in plaintext. They are encrypted using `scrypt` key derivation functions.
 * **Role-Based Isolation**: 
