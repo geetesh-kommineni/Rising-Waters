@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rising Waters — Flood Risk Prediction</title>
+  <meta name="description" content="Enter weather and environmental parameters to get an AI-powered flood risk prediction."/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  <link rel="stylesheet" href="/static/main.css"/>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">RW</div>
+    Rising Waters
+  </div>
+  <ul class="nav-links">
+    <li><a href="/"        class="nav-link">Dashboard</a></li>
+    <li><a href="/predict" class="nav-link active">Predict</a></li>
+    <li><a href="/history" class="nav-link">History</a></li>
+    <li><a href="/about"   class="nav-link">About</a></li>
+    {% if session.username %}
+      <li class="nav-user" style="display: flex; align-items: center; gap: 8px; margin-left: 16px; font-size: 0.9rem; color: var(--text-muted);">
+        <strong>{{ session.username }}</strong>
+        <span class="role-badge" style="font-size: 0.75rem; background: var(--primary-light); color: var(--primary); padding: 2px 8px; border-radius: var(--radius-pill); font-weight: 600;">
+          {{ session.role }}
+        </span>
+      </li>
+      <li><a href="/logout" class="nav-link" style="color: var(--danger);">Logout</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="page-header-inner">
+      <h1 class="page-title">Flood Risk Prediction</h1>
+      <p class="page-subtitle">Enter weather & rainfall parameters to get an instant AI assessment based on regional records</p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    {% if error %}
+    <div class="alert alert-error">Warning: {{ error }}</div>
+    {% endif %}
+
+    <form id="predict-form" method="POST" action="/predict" class="predict-form">
+
+      <!-- Quick Presets -->
+      <div class="form-section">
+        <div class="form-section-title">Quick Load Presets</div>
+        <p style="font-size:0.9rem; color:var(--text-muted); margin-bottom:16px;">
+          Choose a scenario to automatically fill the parameters with historical scenarios:
+        </p>
+        <div style="display:flex; flex-wrap:wrap; gap:10px;">
+          <button type="button" class="btn btn-ghost" onclick="loadPreset('monsoon')" style="font-size:0.85rem; padding:8px 16px;">Severe Monsoon Season</button>
+          <button type="button" class="btn btn-ghost" onclick="loadPreset('drought')" style="font-size:0.85rem; padding:8px 16px;">Arid / Normal Season</button>
+        </div>
+      </div>
+
+      <!-- Meteorological Parameters -->
+      <div class="form-section">
+        <div class="form-section-title">Regional Weather Parameters</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="Temp">Temperature (°C)</label>
+            <input class="form-input" type="number" id="Temp" name="Temp"
+                   min="15" max="50" step="0.1" value="29" required/>
+            <span class="form-hint">Average regional temperature</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="Humidity">Humidity (%)</label>
+            <input class="form-input" type="number" id="Humidity" name="Humidity"
+                   min="0" max="100" step="1" value="70" required/>
+            <span class="form-hint">Relative atmospheric humidity percentage</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="Cloud Cover">Cloud Cover (%)</label>
+            <input class="form-input" type="number" id="Cloud Cover" name="Cloud Cover"
+                   min="0" max="100" step="0.1" value="30" required/>
+            <span class="form-hint">Cloud cover percentage</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="ANNUAL">Annual Rainfall (mm)</label>
+            <input class="form-input" type="number" id="ANNUAL" name="ANNUAL"
+                   min="0" max="10000" step="0.1" value="3248.6" required/>
+            <span class="form-hint">Total yearly precipitation in millimetres</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rainfall Breaks -->
+      <div class="form-section">
+        <div class="form-section-title">Seasonal Precipitation Breakdown (mm)</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="Jan-Feb">January - February Rainfall</label>
+            <input class="form-input" type="number" id="Jan-Feb" name="Jan-Feb"
+                   min="0" max="2000" step="0.1" value="73.4" required/>
+            <span class="form-hint">Winter season rainfall in mm</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="Mar-May">March - May Rainfall</label>
+            <input class="form-input" type="number" id="Mar-May" name="Mar-May"
+                   min="0" max="3000" step="0.1" value="386.2" required/>
+            <span class="form-hint">Pre-monsoon season rainfall in mm</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="Jun-Sep">June - September Rainfall</label>
+            <input class="form-input" type="number" id="Jun-Sep" name="Jun-Sep"
+                   min="0" max="8000" step="0.1" value="2122.8" required/>
+            <span class="form-hint">Monsoon season rainfall in mm</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="Oct-Dec">October - December Rainfall</label>
+            <input class="form-input" type="number" id="Oct-Dec" name="Oct-Dec"
+                   min="0" max="3000" step="0.1" value="666.1" required/>
+            <span class="form-hint">Post-monsoon season rainfall in mm</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Metrics -->
+      <div class="form-section">
+        <div class="form-section-title">Regional Specific Metrics</div>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label" for="avgjune">June Average Rainfall (mm)</label>
+            <input class="form-input" type="number" id="avgjune" name="avgjune"
+                   min="0" max="2000" step="0.1" value="274.8" required/>
+            <span class="form-hint">Average rainfall specifically in June</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label" for="sub">Sub-division Index</label>
+            <input class="form-input" type="number" id="sub" name="sub"
+                   min="0" max="3000" step="0.1" value="649.9" required/>
+            <span class="form-hint">Sub-divisional rainfall index value</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" id="submit-btn" class="btn btn-primary btn-lg">
+          <span id="btn-text">Analyse Flood Risk</span>
+          <span id="btn-loading" style="display:none;">Analysing...</span>
+        </button>
+        <a href="/" class="btn btn-ghost">← Back to Dashboard</a>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  function loadPreset(type) {
+    if (type === 'monsoon') {
+      document.getElementById('Temp').value = 28;
+      document.getElementById('Humidity').value = 75;
+      document.getElementById('Cloud Cover').value = 40;
+      document.getElementById('ANNUAL').value = 3326.6;
+      document.getElementById('Jan-Feb').value = 9.3;
+      document.getElementById('Mar-May').value = 275.7;
+      document.getElementById('Jun-Sep').value = 2403.4;
+      document.getElementById('Oct-Dec').value = 638.2;
+      document.getElementById('avgjune').value = 130.3;
+      document.getElementById('sub').value = 256.4;
+    } else if (type === 'drought') {
+      document.getElementById('Temp').value = 29;
+      document.getElementById('Humidity').value = 70;
+      document.getElementById('Cloud Cover').value = 30;
+      document.getElementById('ANNUAL').value = 3248.6;
+      document.getElementById('Jan-Feb').value = 73.4;
+      document.getElementById('Mar-May').value = 386.2;
+      document.getElementById('Jun-Sep').value = 2122.8;
+      document.getElementById('Oct-Dec').value = 666.1;
+      document.getElementById('avgjune').value = 274.8;
+      document.getElementById('sub').value = 649.9;
+    }
+  }
+
+  document.getElementById('predict-form').addEventListener('submit', function() {
+    document.getElementById('btn-text').style.display = 'none';
+    document.getElementById('btn-loading').style.display = 'inline';
+    document.getElementById('submit-btn').disabled = true;
+  });
+</script>
+
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

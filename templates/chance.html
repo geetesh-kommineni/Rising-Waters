@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rising Waters — Flood Warning</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand"><div class="nav-brand-icon">RW</div>Rising Waters</div>
+  <ul class="nav-links">
+    <li><a href="/"        class="nav-link">Dashboard</a></li>
+    <li><a href="/predict" class="nav-link">Predict</a></li>
+    <li><a href="/history" class="nav-link">History</a></li>
+    <li><a href="/about"   class="nav-link">About</a></li>
+    {% if session.username %}
+      <li class="nav-user" style="display: flex; align-items: center; gap: 8px; margin-left: 16px; font-size: 0.9rem; color: var(--text-muted);">
+        <strong>{{ session.username }}</strong>
+        <span class="role-badge" style="font-size: 0.75rem; background: var(--primary-light); color: var(--primary); padding: 2px 8px; border-radius: var(--radius-pill); font-weight: 600;">
+          {{ session.role }}
+        </span>
+      </li>
+      <li><a href="/logout" class="nav-link" style="color: var(--danger);">Logout</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<div class="rain-container" id="rain"></div>
+
+<section class="result-section flood-bg">
+  <div class="result-card result-card-flood">
+
+    <div class="result-icon-wrap">
+      <div class="result-icon-bg flood-icon-bg"></div>
+      <span class="result-icon-emoji">!</span>
+    </div>
+
+    <div class="result-label result-label-flood">HIGH FLOOD RISK DETECTED</div>
+    <h1 class="result-title result-title-flood">FLOOD WARNING</h1>
+    <p class="result-ts">{{ timestamp }}</p>
+
+    <div class="prob-wrap">
+      <div class="prob-header">
+        <span class="prob-label-text">Flood Probability</span>
+        <span class="prob-pct prob-pct-flood">{{ probability }}%</span>
+      </div>
+      <div class="prob-track">
+        <div class="prob-fill prob-fill-flood" id="prob-bar" style="width:0" data-w="{{ probability }}%"></div>
+      </div>
+    </div>
+
+    <div class="risk-chip {{ risk.lower() }}">
+      Risk Level: <strong>{{ risk }}</strong>
+    </div>
+
+    <div class="result-details">
+      <div class="detail-chip">
+        <span class="detail-icon">Rain</span>
+        <span class="detail-label">Annual Rainfall</span>
+        <span class="detail-value">{{ features.ANNUAL }} mm</span>
+      </div>
+      <div class="detail-chip">
+        <span class="detail-icon">Season</span>
+        <span class="detail-label">Monsoon Rainfall</span>
+        <span class="detail-value">{{ features['Jun-Sep'] }} mm</span>
+      </div>
+      <div class="detail-chip">
+        <span class="detail-icon">Cloud</span>
+        <span class="detail-label">June Average</span>
+        <span class="detail-value">{{ features.avgjune }} mm</span>
+      </div>
+      <div class="detail-chip">
+        <span class="detail-icon">Storm</span>
+        <span class="detail-label">Sub-division</span>
+        <span class="detail-value">{{ features.sub }}</span>
+      </div>
+    </div>
+
+    <div class="advisory-box advisory-box-flood">
+      <div class="advisory-title advisory-title-flood">Emergency Advisory</div>
+      <ul class="advisory-list">
+        <li>Issue immediate evacuation advisories for all low-lying areas</li>
+        <li>Alert local emergency response teams and disaster management cells</li>
+        <li>Coordinate with meteorological department for continuous monitoring</li>
+        <li>Activate flood relief camps and mobilise rescue resources</li>
+        <li>Broadcast public safety warnings across all communication channels</li>
+      </ul>
+    </div>
+
+    <div class="result-actions">
+      <a href="/predict" class="btn btn-ghost">New Prediction</a>
+      <a href="/"        class="btn btn-primary">Dashboard</a>
+      <a href="/history" class="btn btn-ghost">History</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p class="footer-main">Rising Waters — A Machine Learning Approach to Flood Prediction</p>
+    <p class="footer-sub">Python · Scikit-Learn · XGBoost · Flask · Modern Light Design System</p>
+  </div>
+</footer>
+
+<script>
+window.addEventListener("load", () => {
+  const bar = document.getElementById("prob-bar");
+  setTimeout(() => { bar.style.width = bar.dataset.w; }, 300);
+});
+const rain = document.getElementById("rain");
+for (let i = 0; i < 60; i++) {
+  const d = document.createElement("div");
+  d.className = "rain-drop";
+  d.style.left = Math.random() * 100 + "vw";
+  d.style.animationDuration = (Math.random() * 0.8 + 0.5) + "s";
+  d.style.animationDelay    = (Math.random() * 3) + "s";
+  d.style.opacity = (Math.random() * 0.5 + 0.2).toString();
+  rain.appendChild(d);
+}
+</script>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

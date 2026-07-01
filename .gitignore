@@ -1,0 +1,30 @@
+# Python standard ignores
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.toast
+.cache/
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+*.db
+*.sqlite3
+
+# local environment / settings ignores
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
+# Project-specific local databases (auto-created)
+rising_waters.db

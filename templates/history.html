@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rising Waters — Prediction History</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand"><div class="nav-brand-icon">RW</div>Rising Waters</div>
+  <ul class="nav-links">
+    <li><a href="/"        class="nav-link">Dashboard</a></li>
+    <li><a href="/predict" class="nav-link">Predict</a></li>
+    <li><a href="/history" class="nav-link active">History</a></li>
+    <li><a href="/about"   class="nav-link">About</a></li>
+    {% if session.username %}
+      <li class="nav-user" style="display: flex; align-items: center; gap: 8px; margin-left: 16px; font-size: 0.9rem; color: var(--text-muted);">
+        <strong>{{ session.username }}</strong>
+        <span class="role-badge" style="font-size: 0.75rem; background: var(--primary-light); color: var(--primary); padding: 2px 8px; border-radius: var(--radius-pill); font-weight: 600;">
+          {{ session.role }}
+        </span>
+      </li>
+      <li><a href="/logout" class="nav-link" style="color: var(--danger);">Logout</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="container" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+    <div class="page-header-inner">
+      <h1 class="page-title">Prediction History</h1>
+      <p class="page-subtitle">All flood risk predictions recorded in the database</p>
+    </div>
+    {% if history %}
+    <form action="/clear_history" method="POST">
+      <button type="submit" class="btn btn-ghost" style="color:var(--danger); border-color:var(--danger-border); background-color:var(--danger-light); padding:8px 16px; font-size:0.88rem;">Clear History</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    {% if history %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Timestamp</th>
+            <th>Submitted By</th>
+            <th>Result</th>
+            <th>Risk Level</th>
+            <th>Probability</th>
+            <th>Annual Rainfall</th>
+            <th>Cloud Cover</th>
+            <th>Temp / Humidity</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in history %}
+          <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ p.timestamp }}</td>
+            <td>
+              <strong>{{ p.username }}</strong>
+              <div style="font-size:0.75rem; color:var(--primary); font-weight:600;">{{ p.role }}</div>
+            </td>
+            <td>
+              <span class="badge {% if p.label == 'Flood' %}badge-flood{% else %}badge-safe{% endif %}">
+                {{ p.label }}
+              </span>
+            </td>
+            <td><span class="risk-pill {{ p.risk.lower() }}">{{ p.risk }}</span></td>
+            <td>
+              <div class="mini-bar-wrap">
+                <div class="mini-bar-track">
+                  <div class="mini-bar-fill {% if p.label == 'Flood' %}mini-bar-flood{% else %}mini-bar-safe{% endif %}"
+                       style="width:{{ p.probability }}%"></div>
+                </div>
+                {{ p.probability }}%
+              </div>
+            </td>
+            <td>{{ p.rainfall }} mm</td>
+            <td>{{ p.visibility }}%</td>
+            <td>{{ p.temp }}°C / {{ p.humidity }}%</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state" style="text-align:center; padding:60px 20px;">
+      <div style="width:72px; height:72px; border:2px dashed var(--border); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 20px auto;">
+        <span style="font-family:var(--font-title); font-size:0.65rem; font-weight:800; color:var(--text-subtle); letter-spacing:0.08em; text-transform:uppercase;">NONE</span>
+      </div>
+      <div class="empty-title" style="font-family:var(--font-title); font-size:1.3rem; font-weight:700; color:var(--text-main); margin-bottom:8px;">No predictions yet</div>
+      <p class="empty-desc" style="color:var(--text-muted); margin-bottom:24px;">Run your first flood prediction to see results here.</p>
+      <a href="/predict" class="btn btn-primary">Start Prediction</a>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p class="footer-main">Rising Waters — A Machine Learning Approach to Flood Prediction</p>
+    <p class="footer-sub">Python · Scikit-Learn · XGBoost · Flask · Modern Light Design System</p>
+  </div>
+</footer>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

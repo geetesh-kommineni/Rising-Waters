@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rising Waters — AI Flood Prediction Dashboard</title>
+  <meta name="description" content="AI-powered flood risk prediction system using XGBoost machine learning on meteorological data for disaster preparedness."/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand">
+    <div class="nav-brand-icon">RW</div>
+    Rising Waters
+  </div>
+  <ul class="nav-links">
+    <li><a href="/"        class="nav-link active">Dashboard</a></li>
+    <li><a href="/predict" class="nav-link">Predict</a></li>
+    <li><a href="/history" class="nav-link">History</a></li>
+    <li><a href="/about"   class="nav-link">About</a></li>
+    {% if session.username %}
+      <li class="nav-user" style="display: flex; align-items: center; gap: 8px; margin-left: 16px; font-size: 0.9rem; color: var(--text-muted);">
+        <strong>{{ session.username }}</strong>
+        <span class="role-badge" style="font-size: 0.75rem; background: var(--primary-light); color: var(--primary); padding: 2px 8px; border-radius: var(--radius-pill); font-weight: 600;">
+          {{ session.role }}
+        </span>
+      </li>
+      <li><a href="/logout" class="nav-link" style="color: var(--danger);">Logout</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">Rising Waters</h1>
+    <p class="hero-subtitle">A Machine Learning Approach to Flood Prediction</p>
+    <p class="hero-desc">
+      Predict flood risk in real time using XGBoost and ensemble classifiers trained on
+      23 meteorological & environmental features — empowering faster disaster response.
+    </p>
+    <div class="hero-actions">
+      <a href="/predict" class="btn btn-primary btn-lg">Start Prediction</a>
+      <a href="/about"   class="btn btn-ghost btn-lg">Learn More</a>
+    </div>
+  </div>
+  <!-- Animated wave -->
+  <div class="hero-wave">
+    <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <path d="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z"
+            fill="rgba(37,99,235,0.06)">
+        <animate attributeName="d"
+          dur="8s" repeatCount="indefinite"
+          values="M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z;
+                  M0,20 C240,0 480,80 720,40 C960,0 1200,60 1440,20 L1440,80 L0,80 Z;
+                  M0,40 C240,80 480,0 720,40 C960,80 1200,0 1440,40 L1440,80 L0,80 Z"/>
+      </path>
+      <path d="M0,60 C360,20 720,80 1080,40 C1260,20 1380,50 1440,60 L1440,80 L0,80 Z"
+            fill="rgba(13,148,136,0.04)">
+        <animate attributeName="d"
+          dur="12s" repeatCount="indefinite"
+          values="M0,60 C360,20 720,80 1080,40 C1260,20 1380,50 1440,60 L1440,80 L0,80 Z;
+                  M0,40 C360,80 720,20 1080,60 C1260,80 1380,30 1440,40 L1440,80 L0,80 Z;
+                  M0,60 C360,20 720,80 1080,40 C1260,20 1380,50 1440,60 L1440,80 L0,80 Z"/>
+      </path>
+    </svg>
+  </div>
+</section>
+
+<!-- ── STATS ── -->
+<section class="section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card stat-card-1">
+        <div class="stat-icon-wrap stat-icon-1">PRED</div>
+        <div class="stat-value stat-value-1">{{ total }}</div>
+        <div class="stat-label">Total Predictions</div>
+        <div class="stat-trend">SESSION TOTAL</div>
+      </div>
+      <div class="stat-card stat-card-2">
+        <div class="stat-icon-wrap stat-icon-2">RISK</div>
+        <div class="stat-value stat-value-2">{{ floods }}</div>
+        <div class="stat-label">Flood Alerts</div>
+        <div class="stat-trend">HIGH RISK DETECTED</div>
+      </div>
+      <div class="stat-card stat-card-3">
+        <div class="stat-icon-wrap stat-icon-3">SAFE</div>
+        <div class="stat-value stat-value-3">{{ no_floods }}</div>
+        <div class="stat-label">Safe Regions</div>
+        <div class="stat-trend">NO RISK DETECTED</div>
+      </div>
+      <div class="stat-card stat-card-4">
+        <div class="stat-icon-wrap stat-icon-4">ACC</div>
+        <div class="stat-value stat-value-4">{{ xgb_accuracy }}%</div>
+        <div class="stat-label">Model Accuracy</div>
+        <div class="stat-trend">XGBOOST · DB METADATA</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ML MODELS ── -->
+<section class="section section-muted">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Machine Learning</div>
+      <h2 class="section-title">Models Compared</h2>
+      <p class="section-subtitle">Four classifiers trained, evaluated, and compared — XGBoost selected for deployment</p>
+    </div>
+    <div class="models-grid">
+      {% for m in models %}
+      <div class="model-card {% if m.algorithm_type == 'XGBoost' %}model-card-best{% endif %}">
+        <div class="model-card-header">
+          <span class="model-icon">
+            {% if m.algorithm_type == 'Decision Tree' %}DT
+            {% elif m.algorithm_type == 'Random Forest' %}RF
+            {% elif m.algorithm_type == 'K-Nearest Neighbors' %}KNN
+            {% else %}XGB
+            {% endif %}
+          </span>
+          <span class="{% if m.algorithm_type == 'XGBoost' %}model-badge-best{% else %}model-badge-type{% endif %}">
+            {% if m.algorithm_type == 'XGBoost' %}Best Model{% else %}Classifier{% endif %}
+          </span>
+        </div>
+        <div class="model-name">{{ m.model_name }}</div>
+        <div class="model-desc">
+          {% if m.algorithm_type == 'Decision Tree' %}Interpretable tree-based classifier with depth-limited splitting on meteorological thresholds.
+          {% elif m.algorithm_type == 'Random Forest' %}200 decision trees using bootstrap aggregation to reduce variance and improve generalization.
+          {% elif m.algorithm_type == 'K-Nearest Neighbors' %}Classifies regions by proximity to the 7 nearest training samples using Euclidean distance.
+          {% else %}Gradient-boosted tree ensemble with 300 estimators — highest accuracy, deployed for live predictions.
+          {% endif %}
+        </div>
+        <div class="model-accuracy-row">
+          <span class="model-accuracy-label">Test Accuracy</span>
+          <span class="model-accuracy-val">{{ m.accuracy }}%</span>
+        </div>
+        <div class="model-bar-track">
+          <div class="model-bar-fill {% if m.algorithm_type == 'XGBoost' %}model-bar-best{% endif %}" style="width:0" data-w="{{ m.accuracy }}%"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ── ML ANALYTICS & INSIGHTS ── -->
+<section class="section section-muted">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Model Insights</div>
+      <h2 class="section-title">EDA & Model Evaluation</h2>
+      <p class="section-subtitle">Visualizations generated during the training phase to analyze correlations, distributions, and model errors.</p>
+    </div>
+    
+    <div class="table-wrap" style="padding: 30px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-card);">
+      <!-- Tab Buttons -->
+      <div style="display: flex; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 24px; flex-wrap: wrap;">
+        <button class="btn btn-ghost" onclick="showChartTab('tab-corr', this)" id="default-chart-tab" style="font-size:0.85rem; padding:8px 16px;">Correlation Heatmap</button>
+        <button class="btn btn-ghost" onclick="showChartTab('tab-features', this)" style="font-size:0.85rem; padding:8px 16px;">Feature Distributions</button>
+        <button class="btn btn-ghost" onclick="showChartTab('tab-comparison', this)" style="font-size:0.85rem; padding:8px 16px;">Model Comparison</button>
+        <button class="btn btn-ghost" onclick="showChartTab('tab-cm', this)" style="font-size:0.85rem; padding:8px 16px;">Confusion Matrices</button>
+      </div>
+
+      <!-- Tab Content Panels -->
+      <div id="tab-corr" class="chart-tab-panel" style="display: block; text-align: center;">
+        <h4 style="margin-bottom:8px; font-family:var(--font-title); font-size:1.15rem; color:var(--text-main);">Feature Correlation Heatmap</h4>
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px;">Highlights the linear relationships between meteorological/environmental parameters and the target flood label.</p>
+        <img src="{{ url_for('static', filename='reports/02_correlation_heatmap.png') }}" alt="Correlation Heatmap" style="max-width: 100%; height: auto; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);" />
+      </div>
+
+      <div id="tab-features" class="chart-tab-panel" style="display: none; text-align: center;">
+        <h4 style="margin-bottom:8px; font-family:var(--font-title); font-size:1.15rem; color:var(--text-main);">Feature Distributions by Target Label</h4>
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px;">Plots showing histogram distributions for key features split by flood occurrence (blue: No Flood, red: Flood).</p>
+        <img src="{{ url_for('static', filename='reports/03_feature_distributions.png') }}" alt="Feature Distributions" style="max-width: 100%; height: auto; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);" />
+      </div>
+
+      <div id="tab-comparison" class="chart-tab-panel" style="display: none; text-align: center;">
+        <h4 style="margin-bottom:8px; font-family:var(--font-title); font-size:1.15rem; color:var(--text-main);">Classifier Comparison Chart</h4>
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:20px;">Compares the test accuracy and 5-fold cross-validation accuracy of the four trained classifiers.</p>
+        <img src="{{ url_for('static', filename='reports/05_model_comparison.png') }}" alt="Model Comparison Chart" style="max-width: 100%; height: auto; border-radius: var(--radius-md); border: 1px solid var(--border); box-shadow: var(--shadow-sm);" />
+      </div>
+
+      <div id="tab-cm" class="chart-tab-panel" style="display: none; text-align: center;">
+        <h4 style="margin-bottom:8px; font-family:var(--font-title); font-size:1.15rem; color:var(--text-main);">Confusion Matrices</h4>
+        <p style="font-size:0.88rem; color:var(--text-muted); margin-bottom:24px;">Confusion matrix for each model evaluating True Positives, False Positives, True Negatives, and False Negatives.</p>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px;">
+          <div style="background:var(--surface-muted); padding:16px; border-radius:var(--radius-md); border:1px solid var(--border);">
+            <h5 style="margin-bottom:8px; font-family:var(--font-title); font-size:0.95rem; color:var(--text-main);">XGBoost (Best)</h5>
+            <img src="{{ url_for('static', filename='reports/cm_xgboost.png') }}" alt="XGBoost Confusion Matrix" style="max-width: 100%; height: auto; border-radius: var(--radius-sm);" />
+          </div>
+          <div style="background:var(--surface-muted); padding:16px; border-radius:var(--radius-md); border:1px solid var(--border);">
+            <h5 style="margin-bottom:8px; font-family:var(--font-title); font-size:0.95rem; color:var(--text-main);">Random Forest</h5>
+            <img src="{{ url_for('static', filename='reports/cm_random_forest.png') }}" alt="Random Forest Confusion Matrix" style="max-width: 100%; height: auto; border-radius: var(--radius-sm);" />
+          </div>
+          <div style="background:var(--surface-muted); padding:16px; border-radius:var(--radius-md); border:1px solid var(--border);">
+            <h5 style="margin-bottom:8px; font-family:var(--font-title); font-size:0.95rem; color:var(--text-main);">K-Nearest Neighbors</h5>
+            <img src="{{ url_for('static', filename='reports/cm_k-nearest_neighbors.png') }}" alt="KNN Confusion Matrix" style="max-width: 100%; height: auto; border-radius: var(--radius-sm);" />
+          </div>
+          <div style="background:var(--surface-muted); padding:16px; border-radius:var(--radius-md); border:1px solid var(--border);">
+            <h5 style="margin-bottom:8px; font-family:var(--font-title); font-size:0.95rem; color:var(--text-main);">Decision Tree</h5>
+            <img src="{{ url_for('static', filename='reports/cm_decision_tree.png') }}" alt="Decision Tree Confusion Matrix" style="max-width: 100%; height: auto; border-radius: var(--radius-sm);" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── RECENT PREDICTIONS ── -->
+{% if history %}
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">Activity</div>
+      <h2 class="section-title">Recent Predictions</h2>
+    </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Result</th>
+            <th>Risk Level</th>
+            <th>Probability</th>
+            <th>Annual Rainfall</th>
+            <th>Cloud Cover</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in history %}
+          <tr>
+            <td>{{ p.timestamp }}</td>
+            <td>
+              <span class="badge {% if p.label == 'Flood' %}badge-flood{% else %}badge-safe{% endif %}">
+                {{ p.label }}
+              </span>
+            </td>
+            <td><span class="risk-pill {{ p.risk.lower() }}">{{ p.risk }}</span></td>
+            <td>
+              <div class="mini-bar-wrap">
+                <div class="mini-bar-track">
+                  <div class="mini-bar-fill {% if p.label == 'Flood' %}mini-bar-flood{% else %}mini-bar-safe{% endif %}"
+                       style="width:{{ p.probability }}%"></div>
+                </div>
+                {{ p.probability }}%
+              </div>
+            </td>
+            <td>{{ p.rainfall }} mm</td>
+            <td>{{ p.visibility }}%</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="center-link">
+      <a href="/history" class="btn btn-ghost">View Full History →</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- ── CTA ── -->
+<section class="section">
+  <div class="container">
+    <div class="cta-banner">
+      <h2 class="cta-title">Ready to predict flood risk?</h2>
+      <p class="cta-desc">Enter your region's weather & rainfall parameters and get an instant AI-powered flood risk assessment.</p>
+      <a href="/predict" class="btn btn-primary btn-lg">Run Flood Prediction</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p class="footer-main">Rising Waters — A Machine Learning Approach to Flood Prediction</p>
+    <p class="footer-sub">Python · Scikit-Learn · XGBoost · Flask · Modern Light Design System</p>
+  </div>
+</footer>
+
+<script>
+// Animate model accuracy bars on scroll
+const bars = document.querySelectorAll('.model-bar-fill[data-w]');
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.width = e.target.dataset.w;
+      obs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+bars.forEach(b => obs.observe(b));
+
+// ML Analytics Tab Switcher
+function showChartTab(tabId, btnEl) {
+  document.querySelectorAll('.chart-tab-panel').forEach(panel => {
+    panel.style.display = 'none';
+  });
+  document.getElementById(tabId).style.display = 'block';
+  btnEl.parentElement.querySelectorAll('button').forEach(btn => {
+    btn.style.background = 'var(--surface)';
+    btn.style.color = 'var(--text-muted)';
+  });
+  btnEl.style.background = 'var(--primary)';
+  btnEl.style.color = 'var(--on-primary)';
+}
+// Set initial active state for the first tab
+document.getElementById('default-chart-tab').style.background = 'var(--primary)';
+document.getElementById('default-chart-tab').style.color = 'var(--on-primary)';
+</script>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

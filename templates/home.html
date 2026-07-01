@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rising Waters — Welcome</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/main.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-brand"><div class="nav-brand-icon">RW</div>Rising Waters</div>
+    <ul class="nav-links">
+      <li><a href="/login" class="nav-link btn btn-primary" style="color:#fff; padding:6px 16px;">Login</a></li>
+    </ul>
+  </nav>
+
+  <div class="page-header" style="padding: 80px 0; text-align: center;">
+    <div class="container">
+      <h1 class="page-title" style="font-size: 2.5rem; margin-bottom: 16px;">Rising Waters</h1>
+      <p class="page-subtitle" style="font-size: 1.2rem; max-width: 700px; margin: 0 auto 30px auto;">
+        A Machine Learning Approach to Flood Prediction. Protecting lives, property, and ecosystems from the increasing threats of flooding in a changing world.
+      </p>
+      <a href="/login" class="btn btn-primary" style="font-size: 1rem; padding: 12px 28px;">Get Started</a>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="container" style="max-width: 800px;">
+      <div class="about-card" style="margin-bottom: 30px;">
+        <div class="about-card-title">Project Purpose</div>
+        <p>Rising Waters focuses on addressing the growing risk of floods, which have become increasingly frequent and severe due to factors such as climate change, unpredictable weather patterns, rapid urbanization, deforestation, and inadequate drainage and water management systems.</p>
+        <p>By analyzing weather data, rainfall patterns, water levels, and other environmental factors, the system can detect trends and generate predictions that support early warning mechanisms.</p>
+      </div>
+
+      <div class="about-card">
+        <div class="about-card-title">Predictive Performance</div>
+        <p>Using state-of-the-art machine learning models (XGBoost, Random Forest, KNN, Decision Tree), the system classifies risk levels and generates warning metrics to help disaster management authorities take proactive measures.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p class="footer-main">Rising Waters — Flood Risk Prediction System</p>
+      <p class="footer-sub">Python · Scikit-Learn · XGBoost · Flask · Modern Light Design System</p>
+    </div>
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

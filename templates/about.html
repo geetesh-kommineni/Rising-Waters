@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rising Waters — About</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+  <link rel="stylesheet" href="/static/main.css"/>
+</head>
+<body>
+<nav class="navbar">
+  <div class="nav-brand"><div class="nav-brand-icon">RW</div>Rising Waters</div>
+  <ul class="nav-links">
+    <li><a href="/"        class="nav-link">Dashboard</a></li>
+    <li><a href="/predict" class="nav-link">Predict</a></li>
+    <li><a href="/history" class="nav-link">History</a></li>
+    <li><a href="/about"   class="nav-link active">About</a></li>
+    {% if session.username %}
+      <li class="nav-user" style="display: flex; align-items: center; gap: 8px; margin-left: 16px; font-size: 0.9rem; color: var(--text-muted);">
+        <strong>{{ session.username }}</strong>
+        <span class="role-badge" style="font-size: 0.75rem; background: var(--primary-light); color: var(--primary); padding: 2px 8px; border-radius: var(--radius-pill); font-weight: 600;">
+          {{ session.role }}
+        </span>
+      </li>
+      <li><a href="/logout" class="nav-link" style="color: var(--danger);">Logout</a></li>
+    {% endif %}
+  </ul>
+</nav>
+
+<div class="page-header">
+  <div class="container">
+    <div class="page-header-inner">
+      <h1 class="page-title">About This Project</h1>
+      <p class="page-subtitle">Rising Waters — A Machine Learning Approach to Flood Prediction</p>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="about-card-title">Project Overview</div>
+        <p>Rising Waters is an intelligent flood risk prediction system that uses machine learning to analyse meteorological and environmental data, helping disaster management authorities make timely, data-driven decisions.</p>
+        <p>The system trains and compares four classification models — Decision Tree, Random Forest, K-Nearest Neighbors, and XGBoost — selecting the best performer (XGBoost, ~90.80% accuracy) for real-time deployment via a Flask web application.</p>
+      </div>
+
+      <div class="about-card">
+        <div class="about-card-title">Tech Stack</div>
+        <div class="tech-tags">
+          <span class="tech-tag">Python 3.x</span>
+          <span class="tech-tag">NumPy</span>
+          <span class="tech-tag">Pandas</span>
+          <span class="tech-tag">Scikit-Learn</span>
+          <span class="tech-tag">XGBoost</span>
+          <span class="tech-tag">Matplotlib</span>
+          <span class="tech-tag">Seaborn</span>
+          <span class="tech-tag">Flask</span>
+          <span class="tech-tag">Pickle</span>
+          <span class="tech-tag">Joblib</span>
+          <span class="tech-tag">SQLite</span>
+          <span class="tech-tag">IBM Cloud</span>
+        </div>
+      </div>
+
+      <div class="about-card">
+        <div class="about-card-title">ML Pipeline</div>
+        <ol class="pipeline-steps">
+          <li>Import Libraries — NumPy, Pandas, Matplotlib, Seaborn, Scikit-learn, XGBoost, Pickle</li>
+          <li>Read Dataset — pd.read_excel / pd.read_csv with head(), shape, describe()</li>
+          <li>Exploratory Data Analysis — correlation heatmap, target distribution</li>
+          <li>Univariate Analysis — distribution plots (histplot) &amp; box plots per feature</li>
+          <li>Handle Missing Values — median imputation to fill null entries</li>
+          <li>Handle Outliers — IQR-based capping (preserves dataset size)</li>
+          <li>Handle Categorical Values — feature mapping &amp; label encoding</li>
+          <li>Data Preprocessing — train/test split (80/20), StandardScaler</li>
+          <li>Model Training — Decision Tree, Random Forest, KNN, XGBoost</li>
+          <li>Evaluation — confusion matrix, classification report, 5-fold cross-validation</li>
+          <li>Save Best Model — XGBoost saved as floods.save using Pickle</li>
+        </ol>
+      </div>
+
+      <div class="about-card">
+        <div class="about-card-title">Input Features (23)</div>
+        <div class="feat-tags">
+          <span class="feat-tag">Annual Rainfall</span>
+          <span class="feat-tag">Seasonal Rainfall</span>
+          <span class="feat-tag">Cloud Visibility</span>
+          <span class="feat-tag">Monsoon Intensity</span>
+          <span class="feat-tag">Deforestation</span>
+          <span class="feat-tag">Urbanization</span>
+          <span class="feat-tag">Climate Change</span>
+          <span class="feat-tag">River Management</span>
+          <span class="feat-tag">Drainage Systems</span>
+          <span class="feat-tag">Dam Quality</span>
+          <span class="feat-tag">Coastal Vulnerability</span>
+          <span class="feat-tag">Landslides</span>
+          <span class="feat-tag">Watersheds</span>
+          <span class="feat-tag">Wetland Loss</span>
+          <span class="feat-tag">Population Score</span>
+          <span class="feat-tag">Siltation</span>
+          <span class="feat-tag">Infrastructure Decay</span>
+          <span class="feat-tag">Encroachments</span>
+          <span class="feat-tag">Agricultural Practices</span>
+          <span class="feat-tag">Political Factors</span>
+          <span class="feat-tag">Inadequate Planning</span>
+          <span class="feat-tag">Topography Drainage</span>
+          <span class="feat-tag">Disaster Preparedness</span>
+        </div>
+      </div>
+
+      <div class="about-card about-card-full">
+        <div class="about-card-title">Use Cases</div>
+        <div class="use-case-grid">
+          <div class="use-case-item">
+            <div class="use-case-icon">1</div>
+            <div class="use-case-title">Early Flood Warning</div>
+            <p class="use-case-desc">Meteorologists enter current readings and get flood probability hours in advance, enabling timely evacuation advisories.</p>
+          </div>
+          <div class="use-case-item">
+            <div class="use-case-icon">2</div>
+            <div class="use-case-title">Disaster Response</div>
+            <p class="use-case-desc">Relief coordinators monitor multiple regions simultaneously during monsoon season to prioritise resource deployment.</p>
+          </div>
+          <div class="use-case-item">
+            <div class="use-case-icon">3</div>
+            <div class="use-case-title">Model Validation</div>
+            <p class="use-case-desc">Government analysts test the system against historical flood event data to evaluate and certify its operational reliability.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <p class="footer-main">Rising Waters — A Machine Learning Approach to Flood Prediction</p>
+    <p class="footer-sub">Python · Scikit-Learn · XGBoost · Flask · Modern Light Design System</p>
+  </div>
+</footer>
+<script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
