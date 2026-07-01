@@ -56,8 +56,8 @@
           Choose a scenario to automatically fill the parameters with historical scenarios:
         </p>
         <div style="display:flex; flex-wrap:wrap; gap:10px;">
-          <button type="button" class="btn btn-ghost" onclick="loadPreset('monsoon')" style="font-size:0.85rem; padding:8px 16px;">Severe Monsoon Season</button>
-          <button type="button" class="btn btn-ghost" onclick="loadPreset('drought')" style="font-size:0.85rem; padding:8px 16px;">Arid / Normal Season</button>
+          <button type="button" id="btn-preset-monsoon" class="btn btn-ghost" onclick="loadPreset('monsoon')" style="font-size:0.85rem; padding:8px 16px;">Severe Monsoon Season</button>
+          <button type="button" id="btn-preset-drought" class="btn btn-ghost" onclick="loadPreset('drought')" style="font-size:0.85rem; padding:8px 16px;">Arid / Normal Season</button>
         </div>
       </div>
 
@@ -155,7 +155,12 @@
 
 <script>
   function loadPreset(type) {
+    // Clear active class from all presets
+    document.getElementById('btn-preset-monsoon').classList.remove('active');
+    document.getElementById('btn-preset-drought').classList.remove('active');
+
     if (type === 'monsoon') {
+      document.getElementById('btn-preset-monsoon').classList.add('active');
       document.getElementById('Temp').value = 28;
       document.getElementById('Humidity').value = 75;
       document.getElementById('Cloud Cover').value = 40;
@@ -167,6 +172,7 @@
       document.getElementById('avgjune').value = 130.3;
       document.getElementById('sub').value = 256.4;
     } else if (type === 'drought') {
+      document.getElementById('btn-preset-drought').classList.add('active');
       document.getElementById('Temp').value = 29;
       document.getElementById('Humidity').value = 70;
       document.getElementById('Cloud Cover').value = 30;
@@ -179,6 +185,16 @@
       document.getElementById('sub').value = 649.9;
     }
   }
+
+  // Clear preset highlight when user manually updates an input
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#predict-form input').forEach(input => {
+      input.addEventListener('input', () => {
+        document.getElementById('btn-preset-monsoon').classList.remove('active');
+        document.getElementById('btn-preset-drought').classList.remove('active');
+      });
+    });
+  });
 
   document.getElementById('predict-form').addEventListener('submit', function() {
     document.getElementById('btn-text').style.display = 'none';

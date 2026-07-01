@@ -1361,3 +1361,12 @@ body {
   box-shadow: 0 20px 40px -15px rgba(37, 99, 235, 0.12) !important;
   border-color: rgba(37, 99, 235, 0.2) !important;
 }
+
+/* 6. Active style for preset buttons */
+.btn-ghost.active {
+  background: var(--primary-light) !important;
+  color: var(--primary) !important;
+  border-color: var(--primary) !important;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1) !important;
+}
