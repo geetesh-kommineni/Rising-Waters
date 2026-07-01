@@ -1,40 +1,6 @@
-// Immediate Theme Initialization to prevent flash of light mode
-(function() {
-    const currentTheme = localStorage.getItem("theme") || "light";
-    document.documentElement.setAttribute("data-theme", currentTheme);
-})();
-
 console.log("main.js loaded — Active Validation System Initialized");
 
 document.addEventListener("DOMContentLoaded", () => {
-    // ── Dynamic Dark/Light Theme Switcher Injection ──
-    const navLinks = document.querySelector(".nav-links");
-    if (navLinks) {
-        const li = document.createElement("li");
-        const btn = document.createElement("button");
-        btn.id = "theme-toggle";
-        btn.className = "nav-link";
-        btn.style.background = "none";
-        btn.style.border = "none";
-        btn.style.cursor = "pointer";
-        btn.style.fontWeight = "600";
-        btn.style.fontSize = "0.95rem";
-        
-        // Initial setup
-        const currentTheme = localStorage.getItem("theme") || "light";
-        btn.textContent = currentTheme === "dark" ? "Light Mode" : "Dark Mode";
-        
-        btn.addEventListener("click", () => {
-            const theme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-            document.documentElement.setAttribute("data-theme", theme);
-            localStorage.setItem("theme", theme);
-            btn.textContent = theme === "dark" ? "Light Mode" : "Dark Mode";
-        });
-        
-        li.appendChild(btn);
-        navLinks.appendChild(li);
-    }
-
     const form = document.getElementById("predict-form");
     if (!form) return;
 
