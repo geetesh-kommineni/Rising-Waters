@@ -46,20 +46,38 @@
       </div>
 
       <div class="about-card">
-        <div class="about-card-title">Tech Stack</div>
-        <div class="tech-tags">
-          <span class="tech-tag">Python 3.x</span>
-          <span class="tech-tag">NumPy</span>
-          <span class="tech-tag">Pandas</span>
-          <span class="tech-tag">Scikit-Learn</span>
-          <span class="tech-tag">XGBoost</span>
-          <span class="tech-tag">Matplotlib</span>
-          <span class="tech-tag">Seaborn</span>
-          <span class="tech-tag">Flask</span>
-          <span class="tech-tag">Pickle</span>
-          <span class="tech-tag">Joblib</span>
-          <span class="tech-tag">SQLite</span>
-          <span class="tech-tag">IBM Cloud</span>
+        <div class="about-card-title">Tech Stack & Documentation</div>
+        <div class="tech-links-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 10px; margin-top: 10px;">
+          <a href="https://www.anaconda.com/download" target="_blank" class="tech-link-item" style="display: block; padding: 10px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--primary); transition: var(--ease);">
+            Anaconda Navigator
+          </a>
+          <a href="https://www.jetbrains.com/pycharm/" target="_blank" class="tech-link-item" style="display: block; padding: 10px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--primary); transition: var(--ease);">
+            PyCharm IDE
+          </a>
+          <a href="https://numpy.org/doc/stable/" target="_blank" class="tech-link-item" style="display: block; padding: 10px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--primary); transition: var(--ease);">
+            NumPy
+          </a>
+          <a href="https://pandas.pydata.org/docs/" target="_blank" class="tech-link-item" style="display: block; padding: 10px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--primary); transition: var(--ease);">
+            Pandas
+          </a>
+          <a href="https://scikit-learn.org/stable/" target="_blank" class="tech-link-item" style="display: block; padding: 10px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--primary); transition: var(--ease);">
+            Scikit-Learn
+          </a>
+          <a href="https://xgboost.readthedocs.io/" target="_blank" class="tech-link-item" style="display: block; padding: 10px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--primary); transition: var(--ease);">
+            XGBoost
+          </a>
+          <a href="https://matplotlib.org/stable/" target="_blank" class="tech-link-item" style="display: block; padding: 10px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--primary); transition: var(--ease);">
+            Matplotlib
+          </a>
+          <a href="https://seaborn.pydata.org/" target="_blank" class="tech-link-item" style="display: block; padding: 10px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--primary); transition: var(--ease);">
+            Seaborn
+          </a>
+          <a href="https://flask.palletsprojects.com/" target="_blank" class="tech-link-item" style="display: block; padding: 10px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--primary); transition: var(--ease);">
+            Flask Framework
+          </a>
+          <a href="https://docs.python.org/3/library/sqlite3.html" target="_blank" class="tech-link-item" style="display: block; padding: 10px; background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); text-align: center; font-size: 0.82rem; font-weight: 600; color: var(--primary); transition: var(--ease);">
+            SQLite Database
+          </a>
         </div>
       </div>
 
@@ -127,6 +145,128 @@
             <div class="use-case-title">Model Validation</div>
             <p class="use-case-desc">Government analysts test the system against historical flood event data to evaluate and certify its operational reliability.</p>
           </div>
+        </div>
+      </div>
+
+      <div class="about-card about-card-full" style="margin-top: 32px;">
+        <div class="about-card-title">Project Development Roadmap (Epics &amp; Stories)</div>
+        <div class="roadmap-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; margin-top: 16px;">
+          
+          <!-- Epic 1 -->
+          <div class="roadmap-epic-card" style="background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; transition: var(--ease);">
+            <div class="epic-badge" style="display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary); background: var(--primary-light); padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: 12px;">Epic 1: Data Collection</div>
+            <ul style="display: flex; flex-direction: column; gap: 12px; list-style: none; padding: 0; margin: 0;">
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 1:</strong> Download the flood prediction dataset and load it into the environment for analysis and model development.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Epic 2 -->
+          <div class="roadmap-epic-card" style="background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; transition: var(--ease);">
+            <div class="epic-badge" style="display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary); background: var(--primary-light); padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: 12px;">Epic 2: Visualizing &amp; Analysing</div>
+            <ul style="display: flex; flex-direction: column; gap: 12px; list-style: none; padding: 0; margin: 0;">
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 1:</strong> Import all required Python libraries for data manipulation, visualization, and ML.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 2:</strong> Read and explore the dataset to understand its structure, features, and target variable.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 3:</strong> Perform univariate analysis to study the distribution and characteristics of individual variables.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 4:</strong> Conduct multivariate analysis to identify relationships and dependencies among features.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 5:</strong> Perform descriptive statistical analysis to summarize key insights and trends.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Epic 3 -->
+          <div class="roadmap-epic-card" style="background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; transition: var(--ease);">
+            <div class="epic-badge" style="display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary); background: var(--primary-light); padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: 12px;">Epic 3: Data Pre-Processing</div>
+            <ul style="display: flex; flex-direction: column; gap: 12px; list-style: none; padding: 0; margin: 0;">
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 1:</strong> Identify and handle missing values to improve data quality and consistency.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 2:</strong> Detect and treat outliers that may negatively impact model performance.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 3:</strong> Convert categorical variables into numerical representations suitable for ML algorithms.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 4:</strong> Split the dataset into training and testing subsets for model evaluation.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 5:</strong> Apply feature scaling techniques to normalize numerical features and improve accuracy.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Epic 4 -->
+          <div class="roadmap-epic-card" style="background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; transition: var(--ease);">
+            <div class="epic-badge" style="display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary); background: var(--primary-light); padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: 12px;">Epic 4: Model Building</div>
+            <ul style="display: flex; flex-direction: column; gap: 12px; list-style: none; padding: 0; margin: 0;">
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 1:</strong> Train a Decision Tree model and evaluate its ability to predict flood risk.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 2:</strong> Build and test a Random Forest model to achieve improved performance.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 3:</strong> Implement a K-Nearest Neighbors (KNN) model and analyze classification results.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 4:</strong> Train an XGBoost model and compare its effectiveness against other classifiers.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 5:</strong> Compare the performance of all developed models using metrics (accuracy, CV).</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 6:</strong> Select the best-performing model (XGBoost) and save it for deployment.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Epic 5 -->
+          <div class="roadmap-epic-card" style="background: var(--surface-muted); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 24px; transition: var(--ease);">
+            <div class="epic-badge" style="display: inline-block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--primary); background: var(--primary-light); padding: 4px 10px; border-radius: var(--radius-pill); margin-bottom: 12px;">Epic 5: Application Building</div>
+            <ul style="display: flex; flex-direction: column; gap: 12px; list-style: none; padding: 0; margin: 0;">
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 1:</strong> Design and develop HTML pages to create a clean and user-friendly Web UI.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 2:</strong> Build the Flask application and integrate the trained prediction model.</span>
+              </li>
+              <li style="display: flex; gap: 10px; font-size: 0.88rem; color: var(--text-muted); line-height: 1.5;">
+                <span style="color: var(--success); font-weight: bold; flex-shrink: 0;">[x]</span>
+                <span><strong>Story 3:</strong> Run, test, and validate the web application to ensure 100% accurate predictions.</span>
+              </li>
+            </ul>
+          </div>
+
         </div>
       </div>
     </div>
