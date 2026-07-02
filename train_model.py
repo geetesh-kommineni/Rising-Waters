@@ -599,7 +599,7 @@ def KNN(X_train, X_test, y_train, y_test):
 
     # Display results
     print("\n[RESULT] Accuracy:", accuracy)
-    print("\nConfusion Matrix:")
+    print("\nConfusion Matrix::")
     print(cm)
     print("\nClassification Report:")
     print(cr)
