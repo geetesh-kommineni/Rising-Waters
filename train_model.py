@@ -340,17 +340,22 @@ else:
 # ==============================================================================
 print("\n[7] Preprocessing -- Train/Test Split & Feature Scaling ...")
 
-# Train / Test split (80% train, 20% test, stratified)
-x_train, x_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42, stratify=y
-)
-print("    Train set : {}  |  Test set : {}".format(x_train.shape, x_test.shape))
+#split the data into train and test set from our x and y
+#import train_test_split function
+from sklearn.model_selection import train_test_split
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.25,random_state=10)
 
-# Feature Scaling -- StandardScaler normalises all features to mean=0, std=1
-# This is critical for distance-based models (KNN) and gradient-based models
-scaler = StandardScaler()
-X_train = scaler.fit_transform(x_train)
-X_test  = scaler.transform(x_test)
+# Flatten targets to ensure a 1D labels array for classifier fitting (slide compatibility)
+y_train = y_train[:, -1] if len(y_train.shape) > 1 else y_train
+y_test  = y_test[:, -1] if len(y_test.shape) > 1 else y_test
+
+#import Standardscaler
+from sklearn.preprocessing import StandardScaler
+#create object to Standardscaler class
+sc=StandardScaler()
+X_train = sc.fit_transform(x_train)
+X_test  = sc.transform(x_test) # Keep correct non-leakage transform for active predictions
+scaler = sc
 
 # Save scaler
 joblib.dump(scaler, "model/scaler.pkl")
