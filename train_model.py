@@ -149,15 +149,15 @@ plt.savefig("static/reports/01_target_distribution.png", dpi=150)
 plt.close()
 
 # --- Correlation heatmap ---
-fig, ax = plt.subplots(figsize=(14, 10))
-numeric_cols = dataset.select_dtypes(include=np.number).columns
-corr = dataset[numeric_cols].corr()
-mask = np.triu(np.ones_like(corr, dtype=bool))
-sns.heatmap(corr, mask=mask, cmap="coolwarm", center=0,
-            linewidths=0.5, ax=ax, annot=False, fmt=".2f")
-ax.set_title("Feature Correlation Heatmap", fontsize=14, fontweight="bold")
-plt.tight_layout()
+import seaborn as sns
+fig = plt.gcf()
+fig.set_size_inches(15, 15)
+fig = sns.heatmap(dataset.corr(), annot=True, cmap='summer',
+                  linewidths=1, linecolor='k', square=True,
+                  mask=False, vmin=-1, vmax=1,
+                  cbar_kws={"orientation": "vertical"}, cbar=True)
 plt.savefig("static/reports/02_correlation_heatmap.png", dpi=150)
+plt.savefig("reports/02_correlation_heatmap.png", dpi=150)
 plt.close()
 
 print("    [OK] EDA charts saved to static/reports/")
