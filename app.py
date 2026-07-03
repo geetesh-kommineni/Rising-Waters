@@ -264,9 +264,29 @@ def predict():
             # Predict
             prediction = model.predict(input_scaled)[0]
             try:
-                probability = float(model.predict_proba(input_scaled)[0][1])
+                raw_proba = float(model.predict_proba(input_scaled)[0][1])
             except Exception:
-                probability = 1.0 if prediction == 1 else 0.0
+                raw_proba = 1.0 if prediction == 1 else 0.0
+
+            # Compute a soft probability using rainfall features so the result
+            # shows meaningful intermediate values (not just 0% or 100%).
+            annual   = features["ANNUAL"]
+            jun_sep  = features["Jun-Sep"]
+            mar_may  = features["Mar-May"]
+            jan_feb  = features["Jan-Feb"]
+            # Normalised weighted score based on dataset value ranges
+            annual_score  = min(annual / 4500.0, 1.0)          # max ~4500
+            junsep_score  = min(jun_sep / 3500.0, 1.0)         # max ~3500
+            marmay_score  = min(mar_may / 900.0, 1.0)          # max ~900
+            janfeb_score  = min(jan_feb / 100.0, 1.0)          # max ~100
+            soft_score    = (
+                0.40 * annual_score +
+                0.35 * junsep_score +
+                0.15 * marmay_score +
+                0.10 * janfeb_score
+            )
+            # Blend: 60% model hard output + 40% soft rainfall score
+            probability = round(0.60 * raw_proba + 0.40 * soft_score, 4)
                 
             label     = "Flood" if prediction == 1 else "No Flood"
             risk, _   = get_risk_level(probability)
