@@ -3,6 +3,8 @@
 
 An intelligent flood risk prediction system that uses machine learning to analyse meteorological and environmental data — helping disaster management authorities make timely, data-driven decisions.
 
+**Live Deployment Website**: [https://rising-waters-jfki.onrender.com](https://rising-waters-jfki.onrender.com)
+
 ---
 
 ##  Key Features & Enhancements
