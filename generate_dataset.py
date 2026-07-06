@@ -3,32 +3,26 @@ generate_dataset.py
 Generates a realistic synthetic flood prediction dataset for the Rising Waters project.
 Run this once to create dataset/flood_prediction.csv
 """
-
 import numpy as np
 import pandas as pd
 import os
-
 np.random.seed(42)
 n = 2500
-
-# --- Feature generation (realistic meteorological/environmental ranges) ---
-annual_rainfall        = np.random.uniform(500, 4000, n)       # mm
+annual_rainfall        = np.random.uniform(500, 4000, n)
 seasonal_rainfall      = annual_rainfall * np.random.uniform(0.4, 0.85, n)
-monsoon_intensity      = np.random.uniform(0, 10, n)           # 0-10 index
-cloud_visibility       = np.random.uniform(0.1, 10, n)         # km
-river_management       = np.random.uniform(0, 10, n)           # quality index 0-10
-deforestation          = np.random.uniform(0, 10, n)           # severity 0-10
-urbanization           = np.random.uniform(0, 10, n)           # 0-10 index
-climate_change         = np.random.uniform(0, 10, n)           # impact 0-10
-drainage_systems       = np.random.uniform(0, 10, n)           # quality 0-10
-coastal_vulnerability  = np.random.uniform(0, 10, n)           # risk 0-10
-landslides             = np.random.uniform(0, 10, n)           # risk 0-10
-watersheds             = np.random.uniform(0, 10, n)           # health 0-10
-infrastructure_decay   = np.random.uniform(0, 10, n)           # deterioration 0-10
-population_score       = np.random.uniform(0, 10, n)           # density risk 0-10
-wetland_loss           = np.random.uniform(0, 10, n)           # % loss index 0-10
-
-# --- Target: flood probability (continuous 0–1) based on realistic drivers ---
+monsoon_intensity      = np.random.uniform(0, 10, n)
+cloud_visibility       = np.random.uniform(0.1, 10, n)
+river_management       = np.random.uniform(0, 10, n)
+deforestation          = np.random.uniform(0, 10, n)
+urbanization           = np.random.uniform(0, 10, n)
+climate_change         = np.random.uniform(0, 10, n)
+drainage_systems       = np.random.uniform(0, 10, n)
+coastal_vulnerability  = np.random.uniform(0, 10, n)
+landslides             = np.random.uniform(0, 10, n)
+watersheds             = np.random.uniform(0, 10, n)
+infrastructure_decay   = np.random.uniform(0, 10, n)
+population_score       = np.random.uniform(0, 10, n)
+wetland_loss           = np.random.uniform(0, 10, n)
 flood_prob = (
     0.25 * (annual_rainfall / 4000) +
     0.20 * (seasonal_rainfall / 3400) +
@@ -46,15 +40,11 @@ flood_prob = (
     0.01 * (population_score / 10) +
     0.00 * (wetland_loss / 10)
 )
-# Clip and add slight noise
 flood_prob = np.clip(flood_prob + np.random.normal(0, 0.03, n), 0, 1)
-
-# Binary label: 1 = Flood, 0 = No Flood  (threshold ~0.47 for ~50/50 split)
 flood_label = (flood_prob >= 0.47).astype(int)
-
 df = pd.DataFrame({
     "MonsoonIntensity":         monsoon_intensity.round(2),
-    "TopographyDrainage":       (10 - drainage_systems).round(2),   # higher = worse
+    "TopographyDrainage":       (10 - drainage_systems).round(2),
     "RiverManagement":          river_management.round(2),
     "Deforestation":            deforestation.round(2),
     "Urbanization":             urbanization.round(2),
@@ -77,9 +67,8 @@ df = pd.DataFrame({
     "SeasonalRainfall":         seasonal_rainfall.round(2),
     "CloudVisibility":          cloud_visibility.round(2),
     "FloodProbability":         flood_prob.round(4),
-    "FloodLabel":               flood_label        # Target
+    "FloodLabel":               flood_label
 })
-
 os.makedirs("dataset", exist_ok=True)
 df.to_csv("dataset/flood_prediction.csv", index=False)
 print(f"Dataset created: dataset/flood_prediction.csv  ({len(df)} rows)")
