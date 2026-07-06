@@ -319,11 +319,4 @@ def about():
         return redirect(url_for("login"))
     return render_template("about.html")
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    try:
-        from waitress import serve
-        print(" * Starting production WSGI server (waitress) on http://0.0.0.0:{}".format(port))
-        serve(app, host="0.0.0.0", port=port)
-    except ImportError:
-        print(" * Waitress not installed, falling back to development server...")
-        app.run(debug=True, host="0.0.0.0", port=port)
+    app.run(debug=True)
