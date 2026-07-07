@@ -1,5 +1,14 @@
 # Rising Waters: AI-Powered Flood Prediction System
 
+## 🌐 Live Deployment & Demo Links
+* **Live Web Application (Render)**: [https://rising-waters-jfki.onrender.com/](https://rising-waters-jfki.onrender.com/)
+* **Project Demonstration Video**: [Google Drive Demo Link](https://drive.google.com/file/d/1om0nWuBKjE5KY0h1-I5MBnTP_kFxwXLl/view?usp=drive_link)
+* **Demo Access Credentials**:
+  * **Admin / Supervisor**: Username: `admin` | Password: `adminpassword`
+  * **Meteorologist / Operator**: Username: `meteorologist` | Password: `metpassword`
+
+---
+
 ## Project Description:
 Rising Waters harnesses Machine Learning to provide intelligent flood risk prediction, offering disaster management authorities and citizens a fast, data-driven forecasting experience. The platform includes a Flood Predictor module, which calculates flood probability based on weather parameters (Temperature, Humidity, Cloud Cover, and rainfall metrics), a Supervisor Dashboard displaying real-time predictions, historical trends, and model comparisons, and an interactive History Log that records past queries for local analysis.
 
