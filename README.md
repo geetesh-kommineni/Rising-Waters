@@ -16,92 +16,72 @@ Using a trained Random Forest and XGBoost ensemble (achieving 96.55% accuracy), 
 
 ---
 
-## Scenarios
-
-* **Scenario 1**: A local citizen inputs low seasonal rainfall data (e.g., ANNUAL = 2100mm, sub-divisional rainfall = 250mm, Temp = 30°C). The system predicts a "Low Risk" (12% probability), rendering a calming green interface with advice for normal agricultural activities.
-* **Scenario 2**: An on-duty meteorologist inputs heavy monsoon parameters (e.g., Cloud Cover = 44%, Jun-Sep rainfall = 2400mm, sub-divisional rainfall = 800mm, Temp = 28°C). Rising Waters immediately detects a "Critical" flood threat (85% probability), displaying a bright red high-contrast warning page with prompt instructions to initiate emergency sirens, evacuate low-lying banks, and coordinate with the district disaster management cell.
-* **Scenario 3**: A supervisor accesses the global dashboard to audit past warnings and evaluate model accuracies. They review confusion matrices, compare precision-recall curves for Random Forest vs. XGBoost, and download descriptive statistical reports for municipal records.
+## 🛠️ Technologies Used
+* **Backend Framework**: Flask (Python)
+* **Machine Learning Libraries**: Scikit-Learn, XGBoost, Pandas, Numpy, Joblib
+* **Database**: SQLite3
+* **Frontend Design**: HTML5, Vanilla CSS3 (Lumina Hydro Glassmorphism Style), Vanilla JavaScript
+* **Load Testing**: Locust
 
 ---
 
-## Technical Architecture
-
-```mermaid
-graph TD
-    User[User / Meteorologist] -->|Inputs Weather Parameters| UI[Frontend UI: HTML/CSS/JS]
-    UI -->|AJAX POST /predict| Flask[Flask Backend: app.py]
-    Flask -->|Checks/Saves Data| DB[(SQLite Database: rising_waters.db)]
-    Flask -->|Extracts Features| Scaler[StandardScaler: transform.save]
-    Scaler -->|Scaled Inputs| Model[ML Model: model.pkl / floods.save]
-    Model -->|Predicts Probability| Flask
-    Flask -->|Renders Result Page| Output[chance.html / no_chance.html]
+## 📁 Project Structure
+```
+/project-root
+├── dataset/                  - Contains the raw training dataset: flood dataset.xlsx
+├── model/                    - Contains trained model binary (model.pkl, floods.save), scaler (scaler.pkl, transform.save), and feature columns JSON
+├── static/                   - Frontend styles (main.css) and generated performance reports & confusion matrices (reports/)
+├── templates/                - Flask HTML blueprints (home.html, dashboard.html, login.html, signup.html, chance.html, no_chance.html, about.html)
+├── app.py                    - Principal Flask application runner containing prediction pipelines and web controller routes
+├── database.py               - SQLite schema blueprint and auto-seeding script (generates rising_waters.db)
+├── train_model.py            - Machine learning model preprocessing, training, and evaluation pipeline
+├── requirements.txt          - Python dependency requirements
+├── README.md                 - Project setup and run instructions
+├── Procfile / runtime.txt    - Deployment descriptors for Render cloud platform
+└── locustfile.py             - Script configuration for Locust performance load testing
 ```
 
-### Architecture Description:
-Rising Waters utilizes a modular three-tier architecture to deliver rapid, AI-driven content generation:
-* **Frontend**: A responsive user interface built with HTML5, vanilla CSS, and JavaScript. Styled with the Lumina Hydro glassmorphism design system to provide visual clarity.
-* **Backend**: Flask-based controller orchestrating user session management, data validation, database logging, and model inference.
-* **Database**: SQLite database with schemas for user credentials, meteorological inputs, and prediction runs.
-* **Model Inference**: Integrates pre-trained StandardScaler and XGBoost/Random Forest classifiers to output risk scores.
+---
 
-### Pre-requisites:
-* **Flask Framework Knowledge**: [Flask Documentation](https://flask.palletsprojects.com/)
-* **Machine Learning Concepts**: [Scikit-Learn Documentation](https://scikit-learn.org/) / [XGBoost Documentation](https://xgboost.readthedocs.io/)
-* **HTML, CSS, and JavaScript Skills**: [W3Schools HTML/CSS/JavaScript Tutorials](https://www.w3schools.com/)
-* **Python Programming Proficiency**: [Python Documentation](https://docs.python.org/3/)
-* **Version Control with Git**: [Git Documentation](https://git-scm.com/doc)
-* **SQLite Database Knowledge**: [SQLite Documentation](https://www.sqlite.org/docs.html)
+## 🚀 How to Run
+
+### Step 1: Install Dependencies
+Activate your virtual environment and install the required dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+### Step 2: Initialize SQLite Database
+Initialize the schema and seed the default user accounts and prediction history:
+```bash
+python database.py
+```
+
+### Step 3: Train the Classifiers (Optional)
+Run the training pipeline to compute metrics, export confusion matrices, and serialize the best XGBoost/Random Forest models:
+```bash
+python train_model.py
+```
+
+### Step 4: Run the Application Locally
+Launch the Flask development server loop:
+```bash
+python app.py
+```
+Open your browser and navigate to:
+**[http://127.0.0.1:5000](http://127.0.0.1:5000)**
 
 ---
 
-## Project Workflow
-
-### Milestone 1: Model Selection and Architecture
-* **Activity 1.1**: Research and compile historical regional meteorological data (`dataset/flood dataset.xlsx`).
-* **Activity 1.2**: Evaluate classifier options (Decision Tree, Random Forest, KNN, XGBoost) and select the optimal model.
-* **Activity 1.3**: Define the application architecture and SQLite data schema relations.
-* **Activity 1.4**: Set up the local development environment, installing Python dependencies (pandas, scikit-learn, xgboost, flask, joblib).
-
-### Milestone 2: Core Functionalities Development
-* **Activity 2.1**: Implement the preprocessing pipeline (median imputation, IQR outlier capping, and standard scaling).
-* **Activity 2.2**: Train and save the best models (`floods.save`, `transform.save`) using `train_model.py`.
-
-### Milestone 3: App.py Development
-* **Activity 3.1**: Write the core Flask controller in `app.py`, defining routes for user authentication, prediction inference, historical records, and dashboard metrics.
-* **Activity 3.2**: Establish SQLite database integrations in `database.py` with tables for users, weather data, and prediction outputs.
-
-### Milestone 4: Frontend Development
-* **Activity 4.1**: Design and develop the user interface using HTML5, vanilla CSS, and JavaScript, incorporating Lumina Hydro's glassmorphism style.
-* **Activity 4.2**: Create dynamic templates with Flask’s `render_template` to render risk-dependent warning pages.
-
-### Milestone 5: Deployment & Verification
-* **Activity 5.1**: Deploy the application publicly on Render, linking the SQLite backend and environment paths.
-* **Activity 5.2**: Conduct performance load testing using Locust to verify response times and throughput under load.
-
-### Milestone 6: Conclusion
+## 📊 Model Performance
+Accuracies evaluated on stratified cross-validation splits:
+* **XGBoost Classifier**: **96.55%**
+* **Random Forest Classifier**: **96.55%**
+* **Decision Tree Classifier**: **96.55%**
+* **K-Nearest Neighbors**: **89.66%**
 
 ---
 
-## Exploring the Website's Web Pages
-
-### Home / Generator Page:
-* **Description**: The landing page of Rising Waters serves as the public entry point. It features a dark glassmorphism design with animated background blobs, explaining the project's purpose and guiding users to register or log in.
-
-### Input Section:
-* **Description**: A glass-styled input form accessible to logged-in meteorologists. Users enter current weather parameters (Temperature, Humidity, Cloud Cover, and seasonal rainfall amounts). JavaScript limits client-side inputs to reasonable boundaries to ensure high prediction quality.
-
-### Results Section:
-* **Description**: Dynamically rendered based on prediction outcomes:
-  * **Flood Warning (High/Critical Risk)**: Renders a warning page (`chance.html`) containing threat details and emergency instructions.
-  * **Safe Region (Low/Moderate Risk)**: Renders a success page (`no_chance.html`) validating safety.
-
-### Supervisor Dashboard:
-* **Description**: Provides supervisors with real-time prediction metrics, descriptive statistical logs, and correlation heatmaps comparing Decision Tree, Random Forest, KNN, and XGBoost performance.
-
-### History Logs:
-* **Description**: Table listing previous prediction runs. Authorized administrators can clear global history.
-
----
-
-## Conclusion
-Rising Waters demonstrates how machine learning models can be integrated into emergency management workflows. By using a trained Random Forest and XGBoost ensemble, local disaster cells are equipped with highly accurate, real-time flood forecasting, minimizing response latency and saving lives.
+## 🔒 Security Features
+* **Scrypt Hashing**: User passwords are encrypted using strong password key derivation functions.
+* **Role-Based Isolation**: Meteorologist roles are isolated to their own history logs; Supervisors can audit global history records.
