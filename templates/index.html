@@ -186,13 +186,66 @@
     }
   }
 
-  // Clear preset highlight when user manually updates an input
+  // Dynamic proportional synchronization between Annual and Seasonal rainfall inputs
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('#predict-form input').forEach(input => {
+    const annualInput = document.getElementById('ANNUAL');
+    const seasonalInputs = [
+      document.getElementById('Jan-Feb'),
+      document.getElementById('Mar-May'),
+      document.getElementById('Jun-Sep'),
+      document.getElementById('Oct-Dec')
+    ];
+
+    // 1. Sync seasons -> ANNUAL
+    function syncSeasonsToAnnual() {
+      let sum = 0;
+      seasonalInputs.forEach(input => {
+        sum += parseFloat(input.value) || 0;
+      });
+      annualInput.value = parseFloat(sum.toFixed(1));
+    }
+
+    // 2. Sync ANNUAL -> seasons proportionally
+    function syncAnnualToSeasons() {
+      const targetAnnual = parseFloat(annualInput.value) || 0;
+      let currentSum = 0;
+      seasonalInputs.forEach(input => {
+        currentSum += parseFloat(input.value) || 0;
+      });
+
+      if (currentSum > 0 && targetAnnual > 0) {
+        const ratio = targetAnnual / currentSum;
+        seasonalInputs.forEach(input => {
+          const val = parseFloat(input.value) || 0;
+          input.value = parseFloat((val * ratio).toFixed(1));
+        });
+      }
+    }
+
+    // Attach event listeners to seasonal inputs
+    seasonalInputs.forEach(input => {
       input.addEventListener('input', () => {
+        syncSeasonsToAnnual();
         document.getElementById('btn-preset-monsoon').classList.remove('active');
         document.getElementById('btn-preset-drought').classList.remove('active');
       });
+    });
+
+    // Attach event listener to annual input
+    annualInput.addEventListener('input', () => {
+      syncAnnualToSeasons();
+      document.getElementById('btn-preset-monsoon').classList.remove('active');
+      document.getElementById('btn-preset-drought').classList.remove('active');
+    });
+
+    // Attach listener to remaining inputs to clear preset active styles
+    document.querySelectorAll('#predict-form input').forEach(input => {
+      if (input !== annualInput && !seasonalInputs.includes(input)) {
+        input.addEventListener('input', () => {
+          document.getElementById('btn-preset-monsoon').classList.remove('active');
+          document.getElementById('btn-preset-drought').classList.remove('active');
+        });
+      }
     });
   });
 
