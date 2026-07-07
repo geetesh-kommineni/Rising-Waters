@@ -179,7 +179,7 @@ else:
     print("    [OK] Label encoding applied to {} column(s)".format(len(cat_cols)))
 print("\n[7] Preprocessing -- Train/Test Split & Feature Scaling ...")
 from sklearn.model_selection import train_test_split
-x_train,x_test,y_train,y_test = train_test_split(x,y,test_size=0.25,random_state=10)
+x_train,x_test,y_train,y_test = train_test_split(X.values,y,test_size=0.25,random_state=10)
 y_train = y_train[:, -1] if len(y_train.shape) > 1 else y_train
 y_test  = y_test[:, -1] if len(y_test.shape) > 1 else y_test
 from sklearn.preprocessing import StandardScaler
@@ -349,19 +349,16 @@ from sklearn.metrics import confusion_matrix, classification_report, accuracy_sc
 def xgboost(X_train, X_test, y_train, y_test):
     """
     XGBoost Model -- Story Card Implementation
-    Code defines a function that imports a standard Gradient Boosting classifier
-    and performance metrics from scikit-learn. The function initialises the model
-    and trains it on the provided training data using the .fit() method. It then
-    tests the model by making predictions on unseen testing data using .predict().
-    Finally, it calculates the accuracy score, confusion matrix, and classification
-    report, prints these evaluation results to the console, and returns the trained
-    model along with its predictions.
-    Library Imports:
-        from sklearn.ensemble import GradientBoostingClassifier
-        from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
+    Uses the modern XGBClassifier if installed, otherwise falls back to scikit-learn's
+    GradientBoostingClassifier.
     """
     print("\n========== XGBOOST MODEL BUILDING ==========")
-    model = GradientBoostingClassifier()
+    if XGB_AVAILABLE:
+        model = XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42)
+        print("[INFO] XGBoost (XGBClassifier) initialized.")
+    else:
+        model = GradientBoostingClassifier(random_state=42)
+        print("[INFO] GradientBoostingClassifier initialized as fallback.")
     model.fit(X_train, y_train)
     print("[INFO] XGBoost model training completed.")
     y_pred = model.predict(X_test)
@@ -469,9 +466,9 @@ plt.tight_layout()
 plt.savefig("static/reports/05_model_comparison.png", dpi=150)
 plt.close()
 print("\n[9] Model comparison chart saved -> static/reports/05_model_comparison.png")
-best_name  = max(results, key=lambda k: results[k]["accuracy"])
+best_name = "XGBoost" if "XGBoost" in results else max(results, key=lambda k: results[k]["accuracy"])
 best_model = results[best_name]["model"]
-print("\n[10] Best model: {}  ({:.2f}% accuracy)".format(
+print("\n[10] Deployed model selected: {}  ({:.2f}% accuracy)".format(
     best_name, results[best_name]["accuracy"] * 100))
 joblib.dump(best_model, "floods.save")
 joblib.dump(best_model, "model/floods.save")
