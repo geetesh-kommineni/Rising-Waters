@@ -100,7 +100,7 @@ def home():
         return render_template("home.html")
     conn = get_db_connection()
     cursor = conn.cursor()
-    is_admin_or_officer = session.get("role") in ["Admin", "Disaster Management Officer"]
+    is_admin_or_officer = session.get("role") in ["Admin", "Disaster Management Officer", "Meteorologist", "Local Authority"]
     if is_admin_or_officer:
         cursor.execute("SELECT COUNT(*) FROM Prediction")
         total = cursor.fetchone()[0]
@@ -263,7 +263,7 @@ def history():
         return redirect(url_for("login"))
     conn = get_db_connection()
     cursor = conn.cursor()
-    is_admin_or_officer = session.get("role") in ["Admin", "Disaster Management Officer"]
+    is_admin_or_officer = session.get("role") in ["Admin", "Disaster Management Officer", "Meteorologist", "Local Authority"]
     if is_admin_or_officer:
         cursor.execute("""
             SELECT p.*, w.annual_rainfall, w.cloud_cover, w.temp, w.humidity, u.username, u.role
@@ -282,6 +282,15 @@ def history():
             ORDER BY p.prediction_id DESC
         """, (session["user_id"],))
     predictions = cursor.fetchall()
+    if not predictions:
+        cursor.execute("""
+            SELECT p.*, w.annual_rainfall, w.cloud_cover, w.temp, w.humidity, u.username, u.role
+            FROM Prediction p
+            JOIN WeatherData w ON p.data_id = w.data_id
+            JOIN User u ON w.user_id = u.user_id
+            ORDER BY p.prediction_id DESC
+        """)
+        predictions = cursor.fetchall()
     conn.close()
     history_list = []
     for row in predictions:
