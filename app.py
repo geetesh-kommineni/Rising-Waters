@@ -214,7 +214,13 @@ def predict():
                 0.10 * janfeb_score
             )
             probability = round(0.60 * raw_proba + 0.40 * soft_score, 4)
-            label     = "Flood" if prediction == 1 else "No Flood"
+            
+            # Hard override: Extreme annual rainfall unconditionally triggers a flood warning
+            if annual > 5500:
+                prediction = 1
+                probability = max(probability, 0.85)
+
+            label     = "Flood" if prediction == 1 or probability >= 0.50 else "No Flood"
             risk, _   = get_risk_level(probability)
             timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             cursor.execute("SELECT model_id FROM MachineLearningModel WHERE algorithm_type = 'XGBoost'")
